@@ -1,0 +1,49 @@
+{
+    "habits": [
+        {
+            "id": "1",
+            "title": "Morning Meditation",
+            "description": "10 minutes of mindfulness before work",
+            "completed": false,
+            "streak": 12,
+            "color": "bg-purple-500",
+            "icon": "pi pi-compass",
+            "target": 7,
+            "progress": 5
+        },
+        {
+            "id": "2",
+            "title": "Read 30 Pages",
+            "description": "Reading 'Atomic Habits'",
+            "completed": true,
+            "streak": 5,
+            "color": "bg-blue-500",
+            "icon": "pi pi-book",
+            "target": 7,
+            "progress": 7
+        },
+        {
+            "id": "3",
+            "title": "Workout",
+            "description": "Gym or running",
+            "completed": false,
+            "streak": 3,
+            "color": "bg-orange-500",
+            "icon": "pi pi-bolt",
+            "target": 4,
+            "progress": 2
+        },
+        {
+            "id": "4",
+            "title": "Drink Water",
+            "description": "2.5 Liters daily",
+            "completed": true,
+            "streak": 45,
+            "color": "bg-cyan-500",
+            "icon": "pi pi-filter",
+            "target": 7,
+            "progress": 7
+        }
+    ],
+    "activityLogs": []
+}

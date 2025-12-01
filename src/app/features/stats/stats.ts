@@ -1,11 +1,11 @@
 import { Component } from '@angular/core';
 
 @Component({
-  selector: 'sidebar',
+  selector: 'app-stats',
   imports: [],
-  templateUrl: './sidebar.html',
+  templateUrl: './stats.html',
   styles: ``,
 })
-export class Sidebar {
-  
+export class Stats {
+
 }
