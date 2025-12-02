@@ -47,6 +47,38 @@ export class AuthService {
     return hashHex;
   }
 
+  private generateToken(): string {
+    return crypto.randomUUID()
+  }
+
+  private setSession(user: User, token: string): void {
+    localStorage.setItem('currentUser', JSON.stringify({
+      user: {
+        id: user.id,
+        username: user.username,
+        email: user.email,
+        createdAt: user.createdAt
+      },
+      token: token,
+      loggedAt: new Date().toISOString()
+    }))
+
+  }
+
+  getSession(): { user: Omit<User, 'password'>, token: string, loggedAt: string } | null {
+    const sessionData = localStorage.getItem('currentUser');
+
+    if (!sessionData) {
+      return null
+    }
+
+    return JSON.parse(sessionData)
+  }
+
+  isAuthenticated(): boolean {
+    return this.getSession() !== null
+  }
+
   async register(username: string, email: string, password: string, confirmPassword: string) {
     if (this.emailExists(email)) {
       return {
