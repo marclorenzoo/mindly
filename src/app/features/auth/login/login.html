@@ -1,41 +1,193 @@
 <div class="w-full h-screen flex items-center justify-center bg-gray-50">
-    <!-- Sección Izquierda -->
-    <div class="w-1/2 h-full  flex flex-col justify-center px-32">
-        <!-- Logo y Nombre -->
-        <div class="flex items-center gap-3 mb-12">
-            <div class="relative group">
-                <div
-                    class="relative w-14 h-14 bg-gradient-to-br from-blue-600 to-indigo-600 rounded-xl flex items-center justify-center shadow-lg hover:shadow-xl transition-shadow duration-300">
-                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"
-                        class="text-white">
-                        <rect x="3" y="3" width="7" height="7" rx="1.5" fill="currentColor" />
-                        <rect x="3" y="14" width="7" height="7" rx="1.5" fill="currentColor" fill-opacity="0.5" />
-                        <rect x="14" y="3" width="7" height="7" rx="1.5" fill="currentColor" fill-opacity="0.5" />
-                        <rect x="14" y="14" width="7" height="7" rx="1.5" fill="currentColor" />
-                    </svg>
-                </div>
-            </div>
-            <span class="font-bold text-3xl tracking-tight text-gray-900">Mindly</span>
+  <!-- Sección Izquierda -->
+  <div class="w-1/2 h-full flex flex-col justify-center px-32">
+    <!-- Logo y Nombre -->
+    <div class="flex items-center gap-3 mb-12">
+      <div class="relative group">
+        <div
+          class="relative w-14 h-14 bg-gradient-to-br from-blue-600 to-indigo-600 rounded-xl flex items-center justify-center shadow-lg hover:shadow-xl transition-shadow duration-300"
+        >
+          <svg
+            width="28"
+            height="28"
+            viewBox="0 0 24 24"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+            class="text-white"
+          >
+            <rect
+              x="3"
+              y="3"
+              width="7"
+              height="7"
+              rx="1.5"
+              fill="currentColor"
+            />
+            <rect
+              x="3"
+              y="14"
+              width="7"
+              height="7"
+              rx="1.5"
+              fill="currentColor"
+              fill-opacity="0.5"
+            />
+            <rect
+              x="14"
+              y="3"
+              width="7"
+              height="7"
+              rx="1.5"
+              fill="currentColor"
+              fill-opacity="0.5"
+            />
+            <rect
+              x="14"
+              y="14"
+              width="7"
+              height="7"
+              rx="1.5"
+              fill="currentColor"
+            />
+          </svg>
         </div>
-
-        <!-- Título Principal -->
-        <div class="max-w-xl">
-            <h1 class="text-5xl font-bold text-gray-900 leading-tight mb-6">
-                Construye tu mejor<br />
-                versión día a día.
-            </h1>
-
-            <!-- Descripción -->
-            <p class="text-lg text-gray-600 leading-relaxed">
-                Gestiona tus hábitos y tareas de forma sencilla y eficiente.
-            </p>
-        </div>
+      </div>
+      <span class="font-bold text-3xl tracking-tight text-gray-900"
+        >Mindly</span
+      >
     </div>
 
-    <!-- Sección Derecha (placeholder) -->
-    <div class="w-1/2 h-full bg-white flex items-center justify-center">
-        <div class="text-gray-400 text-lg">
-            Formulario de login aquí
-        </div>
+    <!-- Título Principal -->
+    <div class="max-w-xl">
+      <h1 class="text-5xl font-bold text-gray-900 mb-6">
+        Construye tu mejor<br />
+        versión día a día.
+      </h1>
+
+      <!-- Descripción -->
+      <p class="text-lg text-gray-600">
+        Gestiona tus hábitos y tareas de forma sencilla y eficiente.
+      </p>
     </div>
+  </div>
+
+  <!-- Sección Derecha -->
+  <div class="w-1/2 h-full bg-white flex items-center justify-center px-32">
+    <div class="w-full max-w-md">
+      <!-- Título -->
+      <h1 class="text-5xl font-bold text-gray-900 mb-3">Iniciar Sesión</h1>
+      <p class="text-lg text-gray-600 font-light mb-8">
+        Bienvenido de nuevo, te hemos echado de menos 😄
+      </p>
+
+      <!-- Formulario -->
+      <form class="space-y-4" [formGroup]="loginForm" (ngSubmit)="onLogin()">
+        <!-- Campo Email -->
+        <div class="w-full">
+          <legend
+            class="fieldset-legend text-sm block font-medium text-gray-700"
+          >
+            Correo electrónico
+          </legend>
+          <label
+            class="input validator flex items-center gap-2 w-full rounded-xl h-12"
+          >
+            <svg
+              class="w-5 h-5 opacity-50"
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 24 24"
+            >
+              <g
+                stroke-linejoin="round"
+                stroke-linecap="round"
+                stroke-width="2.5"
+                fill="none"
+                stroke="currentColor"
+              >
+                <rect width="20" height="16" x="2" y="4" rx="2"></rect>
+                <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"></path>
+              </g>
+            </svg>
+            <input
+              type="email"
+              placeholder="tu@email.com"
+              required
+              class="flex-1 placeholder:text-gray-400"
+              formControlName="email"
+            />
+          </label>
+          <div class="validator-hint hidden">Enter valid email address</div>
+        </div>
+
+        <!-- Campo Contraseña -->
+        <div class="w-full">
+          <legend
+            class="fieldset-legend text-sm block font-medium text-gray-700"
+          >
+            Contraseña
+          </legend>
+          <label
+            class="input validator flex items-center gap-2 w-full rounded-xl h-12"
+          >
+            <svg
+              class="w-5 h-5 opacity-50"
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 24 24"
+            >
+              <g
+                stroke-linejoin="round"
+                stroke-linecap="round"
+                stroke-width="2.5"
+                fill="none"
+                stroke="currentColor"
+              >
+                <path
+                  d="M2.586 17.414A2 2 0 0 0 2 18.828V21a1 1 0 0 0 1 1h3a1 1 0 0 0 1-1v-1a1 1 0 0 1 1-1h1a1 1 0 0 0 1-1v-1a1 1 0 0 1 1-1h.172a2 2 0 0 0 1.414-.586l.814-.814a6.5 6.5 0 1 0-4-4z"
+                ></path>
+                <circle cx="16.5" cy="7.5" r=".5" fill="currentColor"></circle>
+              </g>
+            </svg>
+            <input
+              type="password"
+              required
+              placeholder="• • • • • • • •"
+              class="flex-1 placeholder:text-gray-400"
+              title="Must be more than 8 characters, including number, lowercase letter, uppercase letter"
+              formControlName="password"
+            />
+          </label>
+          <p class="validator-hint hidden">
+            Must be more than 8 characters, including
+            <br />At least one number <br />At least one lowercase letter
+            <br />At least one uppercase letter
+          </p>
+        </div>
+
+        <!-- Checkbox -->
+        <div class="flex items-center">
+          <label class="label flex items-center gap-2 cursor-pointer">
+            <input type="checkbox" checked="checked" class="checkbox" />
+            <span class="text-sm text-gray-700">Recuérdame</span>
+          </label>
+        </div>
+
+        <!-- Botón -->
+        <div class="flex justify-center">
+          <button type="submit" class="btn btn-wide btn-primary">
+            Iniciar Sesión
+          </button>
+        </div>
+
+        <!-- Link registro -->
+        <p class="text-center text-sm text-gray-600 mt-8">
+          ¿No tienes una cuenta?
+          <a
+            href="auth/register"
+            class="text-blue-600 hover:underline font-medium"
+            >Regístrate</a
+          >
+        </p>
+      </form>
+    </div>
+  </div>
 </div>
