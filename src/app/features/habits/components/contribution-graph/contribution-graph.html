@@ -24,7 +24,7 @@
             <!-- Since we have a flat array of days, we can use CSS grid or flex wrap logic, 
                      but for a true Github graph (weeks as columns), we might need to structure data differently or use CSS Grid with auto-flow column. -->
             <div class="grid grid-rows-7 grid-flow-col gap-1.5 w-full">
-                <div *ngFor="let log of activityLogs" [ngClass]="getColor(log.count)"
+                <div>
                     class="w-4 h-4 rounded-sm hover:ring-2 hover:ring-gray-300 transition-all cursor-pointer"
                     [title]="log.date + ': ' + log.count + ' activities'">
                 </div>

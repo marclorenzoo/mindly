@@ -1,16 +1,44 @@
 export interface Habit {
-    id: string;
+    // Identificación
+    id: number;
+    userId: number;
+
+    // Información básica
     title: string;
     description: string;
-    completed: boolean;
-    streak: number;
+
+    // Visualización
     color: string;
     icon: string;
-    target: number; // e.g., 5 times a week
-    progress: number;
+
+    // Configuración
+    targetPerWeek: number;
+
+    // Rachas
+    currentStreak: number;
+    bestStreak: number;
+
+    // Control de actividad
+    lastCompletedDate: string | null;
+
+    // Progreso semanal
+    currentWeekCompletions: number;
+    weekStartDate: string;
+
+    // Metadata
+    createdAt: string;
+    isActive: boolean;
 }
 
-export interface ActivityLog {
-    date: string; // ISO format YYYY-MM-DD
-    count: number; // Activity level (0-4)
+export interface HabitActivity {
+    id: string;
+    habitId: string;
+    userId: number;
+    date: string;
+    createdAt: string;
+}
+
+export interface HabitsData {
+    habits: Habit[];
+    activities: HabitActivity[];
 }

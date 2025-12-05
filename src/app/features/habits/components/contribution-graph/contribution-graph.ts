@@ -1,5 +1,4 @@
 import { Component, Input } from '@angular/core';
-import { ActivityLog } from '../../models/habit.model';
 import { CommonModule } from '@angular/common';
 
 @Component({
@@ -11,7 +10,6 @@ import { CommonModule } from '@angular/common';
 export class ContributionGraph {
 
 
-  @Input() activityLogs: ActivityLog[] = [];
 
   getColor(count: number): string {
     if (count === 0) return 'bg-gray-100';

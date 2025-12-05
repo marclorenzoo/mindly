@@ -1,51 +1,68 @@
-import { Injectable } from '@angular/core';
-import { Observable, of } from 'rxjs';
-import { Habit, ActivityLog } from '../models/habit.model';
-import data from '../data/data.json';
+import { Injectable, signal } from '@angular/core';
+import { Habit, HabitsData } from '../models/habit.model';
 
 @Injectable({
-    providedIn: 'root'
+  providedIn: 'root',
 })
 export class HabitsService {
+  constructor() {}
 
-    constructor() { }
+  private readonly STORAGE_KEY = 'habits';
+  private _habitsData = signal<HabitsData>(this.loadFromLocalStorage());
 
-    newHabit(habit: Habit) {
-        
+  private loadFromLocalStorage(): HabitsData {
+    const raw = localStorage.getItem(this.STORAGE_KEY);
+    return raw
+      ? (JSON.parse(raw) as HabitsData)
+      : { habits: [], activities: [] };
+  }
+
+  getHabitsData(): HabitsData {
+    return this._habitsData();
+  }
+
+  getHabitsByUser(userId: number): Habit[] {
+    const data = this.getHabitsData();
+    return data.habits.filter((habit) => habit.userId === userId);
+  }
+
+  getHabitById(id: number): Habit | undefined {
+    const data = this.getHabitsData();
+    const result = data.habits.find((habit) => habit.id === id);
+    return result ? result : undefined;
+  }
+
+  private saveHabitsData(data: HabitsData): void {
+    localStorage.setItem(this.STORAGE_KEY, JSON.stringify(data));
+  }
+
+  createHabit(habit: Habit): void {
+    const data = this.getHabitsData();
+    data.habits.push(habit);
+    this.saveHabitsData(data);
+  }
+
+  updateHabit(inputHabit: Habit): void {
+    const data = this.getHabitsData();
+    const index = data.habits.findIndex((habit) => habit.id === inputHabit.id);
+
+    if (index !== -1) {
+      data.habits[index] = inputHabit;
+      this.saveHabitsData(data);
+    } else {
+      console.log('Hábito no encontrado');
     }
+  }
 
-    getHabits(): Observable<Habit[]> {
-        return of(data.habits);
+  deleteHabitById(id: number): void {
+    const data = this.getHabitsData();
+    const index = data.habits.findIndex((habit) => habit.id === id);
+
+    if (index !== -1) {
+      data.habits.splice(index, 1);
+      this.saveHabitsData(data);
+    } else {
+      console.log('Hábito no encontrado');
     }
-
-    getActivityLogs(): Observable<ActivityLog[]> {
-        // Generate mock activity logs for the past year
-        const logs: ActivityLog[] = [];
-        const today = new Date();
-        const oneYearAgo = new Date();
-        oneYearAgo.setFullYear(today.getFullYear() - 1);
-
-        for (let d = new Date(oneYearAgo); d <= today; d.setDate(d.getDate() + 1)) {
-            // Random activity level 0-4
-            // Skew towards 0 to make it look realistic (not every day is productive)
-            const rand = Math.random();
-            let count = 0;
-            if (rand > 0.8) count = 4;
-            else if (rand > 0.6) count = 3;
-            else if (rand > 0.4) count = 2;
-            else if (rand > 0.2) count = 1;
-
-            logs.push({
-                date: d.toISOString().split('T')[0],
-                count: count
-            });
-        }
-        return of(logs);
-    }
-
-    toggleHabit(id: string): Observable<boolean> {
-        // Mock toggle
-        console.log(`Toggled habit ${id}`);
-        return of(true);
-    }
+  }
 }
