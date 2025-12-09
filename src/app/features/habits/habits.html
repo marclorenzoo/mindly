@@ -1,0 +1,212 @@
+<div class="min-h-screen bg-slate-50 p-8 font-outfit text-slate-900">
+  <!-- Header -->
+  <header class="mb-8 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+    <div>
+      <h1 class="text-3xl font-bold text-slate-900">Gestión de Hábitos</h1>
+      <p class="text-slate-500 mt-1">
+        Hoy es {{ formattedDate }}
+      </p>
+    </div>
+
+    <!-- View Toggle -->
+    <div class="bg-slate-200 p-1 rounded-lg inline-flex">
+      <button class="px-4 py-1.5 rounded-md text-sm font-medium transition-all" [class.bg-white]="viewMode === 'today'"
+        [class.shadow-sm]="viewMode === 'today'" [class.text-slate-900]="viewMode === 'today'"
+        [class.text-slate-500]="viewMode !== 'today'" (click)="viewMode = 'today'">
+        Hoy
+      </button>
+      <button class="px-4 py-1.5 rounded-md text-sm font-medium transition-all" [class.bg-white]="viewMode === 'week'"
+        [class.shadow-sm]="viewMode === 'week'" [class.text-slate-900]="viewMode === 'week'"
+        [class.text-slate-500]="viewMode !== 'week'" (click)="viewMode = 'week'">
+        Semana
+      </button>
+      <button class="px-4 py-1.5 rounded-md text-sm font-medium transition-all" [class.bg-white]="viewMode === 'month'"
+        [class.shadow-sm]="viewMode === 'month'" [class.text-slate-900]="viewMode === 'month'"
+        [class.text-slate-500]="viewMode !== 'month'" (click)="viewMode = 'month'">
+        Mes
+      </button>
+    </div>
+  </header>
+
+  <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+    <!-- Left Column: Habits List -->
+    <div class="lg:col-span-2 space-y-6">
+      <div class="flex items-center justify-between mb-2">
+        <h2 class="text-lg font-semibold">Tus hábitos de hoy</h2>
+        <div class="flex items-center gap-2 text-sm text-amber-500 font-medium" *ngIf="todayHabits.length > 0">
+          <i class="pi pi-fire"></i>
+          <span>Racha global activa</span>
+        </div>
+      </div>
+
+      <!-- Habit Card -->
+      <div *ngFor="let habit of todayHabits"
+        class="bg-white rounded-xl p-5 shadow-sm border border-slate-100 flex items-center gap-5 transition-all hover:shadow-md cursor-pointer group"
+        (click)="openEditModal(habit)">
+        <!-- Icon -->
+        <div class="w-12 h-12 rounded-xl flex items-center justify-center text-xl shrink-0 transition-colors"
+          [ngClass]="isCompleted(habit.id) ? 'bg-blue-500 text-white' : 'bg-slate-100 text-slate-500 group-hover:bg-blue-50 group-hover:text-blue-500'">
+          <i [class]="habit.icon"></i>
+        </div>
+
+        <!-- Info -->
+        <div class="flex-1 min-w-0">
+          <h3 class="font-semibold text-lg truncate text-slate-900 group-hover:text-blue-600 transition-colors">{{
+            habit.title }}</h3>
+          <p class="text-slate-500 text-sm">{{ habit.description }}</p>
+        </div>
+
+        <!-- Progress Bar (Visual only for now, could be weekly progress) -->
+        <div class="hidden sm:block w-32">
+          <div class="flex justify-between text-xs mb-1 text-slate-500">
+            <span>Semanal</span>
+            <span>{{ habit.currentWeekCompletions }}/{{ habit.targetPerWeek }}</span>
+          </div>
+          <div class="h-2 bg-slate-100 rounded-full overflow-hidden">
+            <div class="h-full bg-blue-500 rounded-full transition-all duration-500"
+              [style.width.%]="(habit.currentWeekCompletions / habit.targetPerWeek) * 100"></div>
+          </div>
+        </div>
+
+        <!-- Streak Badge -->
+        <div class="text-center px-2">
+          <span class="block text-lg font-bold text-slate-900">{{ habit.currentStreak }}</span>
+          <span class="text-xs text-slate-400">Racha</span>
+        </div>
+
+        <!-- Action Button -->
+        <button (click)="$event.stopPropagation(); toggleHabit(habit.id)"
+          class="w-10 h-10 rounded-full flex items-center justify-center transition-colors shrink-0"
+          [ngClass]="isCompleted(habit.id) ? 'bg-blue-100 text-blue-600' : 'bg-slate-100 text-slate-300 hover:bg-slate-200'">
+          <i class="pi pi-check font-bold"></i>
+        </button>
+      </div>
+
+      <!-- Empty State -->
+      <div *ngIf="todayHabits.length === 0"
+        class="text-center py-12 bg-white rounded-xl border border-dashed border-slate-200">
+        <div
+          class="w-16 h-16 bg-slate-50 rounded-full flex items-center justify-center mx-auto mb-4 text-slate-300 text-2xl">
+          <i class="pi pi-list"></i>
+        </div>
+        <h3 class="text-lg font-medium text-slate-900">No tienes hábitos para hoy</h3>
+        <p class="text-slate-500">¡Crea uno nuevo para empezar!</p>
+      </div>
+    </div>
+
+    <!-- Right Column: Progress & Stats -->
+    <div class="space-y-6">
+      <h2 class="text-lg font-semibold">Tu progreso</h2>
+
+      <!-- Contribution Graph Card -->
+      <app-contribution-graph></app-contribution-graph>
+
+      <!-- Add Button -->
+      <div class="flex justify-end mt-4">
+        <button (click)="openCreateModal()"
+          class="w-14 h-14 bg-blue-500 hover:bg-blue-600 text-white rounded-2xl shadow-lg shadow-blue-200 flex items-center justify-center transition-all hover:scale-105 active:scale-95">
+          <i class="pi pi-plus text-xl font-bold"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- CRUD Modal -->
+  <div *ngIf="isModalOpen" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
+    <div class="bg-white rounded-2xl shadow-xl w-full max-w-2xl overflow-hidden animate-fade-in-up">
+      <!-- Modal Header -->
+      <div class="px-6 py-4 border-b border-slate-100 flex justify-between items-center bg-slate-50/50">
+        <h3 class="text-lg font-bold text-slate-900">
+          {{ isEditing ? 'Editar Hábito' : 'Nuevo Hábito' }}
+        </h3>
+        <button (click)="closeModal()" class="text-slate-400 hover:text-slate-600 transition-colors">
+          <i class="pi pi-times"></i>
+        </button>
+      </div>
+
+      <!-- Modal Body -->
+      <div class="p-6">
+        <form [formGroup]="habitForm" (ngSubmit)="saveHabit()" class="space-y-6">
+
+          <!-- Title & Description -->
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div class="space-y-1">
+              <label class="text-sm font-medium text-slate-700">Título</label>
+              <input type="text" formControlName="title" placeholder="Ej: Leer 20 páginas"
+                class="w-full px-4 py-2 rounded-lg border border-slate-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-100 outline-none transition-all"
+                [class.border-red-300]="habitForm.get('title')?.invalid && habitForm.get('title')?.touched">
+              <p *ngIf="habitForm.get('title')?.invalid && habitForm.get('title')?.touched"
+                class="text-xs text-red-500">
+                El título es obligatorio (min 3 caracteres)
+              </p>
+            </div>
+
+            <div class="space-y-1">
+              <label class="text-sm font-medium text-slate-700">Descripción (Opcional)</label>
+              <input type="text" formControlName="description" placeholder="Ej: Novela de ciencia ficción"
+                class="w-full px-4 py-2 rounded-lg border border-slate-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-100 outline-none transition-all">
+            </div>
+          </div>
+
+          <!-- Target Per Week -->
+          <div class="space-y-2">
+            <label class="text-sm font-medium text-slate-700">Meta semanal (días)</label>
+            <div class="bg-slate-50 p-4 rounded-xl border border-slate-100">
+              <div class="flex items-center gap-4">
+                <span class="text-xs text-slate-400 font-medium uppercase tracking-wider">1 día</span>
+                <input type="range" min="1" max="7" formControlName="targetPerWeek"
+                  class="flex-1 h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-blue-500">
+                <span class="text-xs text-slate-400 font-medium uppercase tracking-wider">7 días</span>
+              </div>
+              <div class="mt-2 text-center">
+                <span class="font-bold text-blue-600 text-lg">
+                  {{ habitForm.get('targetPerWeek')?.value }} días
+                </span>
+                <span class="text-slate-400 text-sm"> por semana</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Icon Selection -->
+          <div class="space-y-2">
+            <label class="text-sm font-medium text-slate-700">Icono</label>
+            <div
+              class="grid grid-cols-8 sm:grid-cols-10 gap-2 max-h-48 overflow-y-auto p-2 bg-slate-50 rounded-xl border border-slate-100">
+              <button type="button" *ngFor="let icon of icons" (click)="selectIcon(icon)"
+                class="w-10 h-10 rounded-lg flex items-center justify-center transition-all hover:bg-white hover:shadow-sm"
+                [class.bg-blue-500]="selectedIcon === icon" [class.text-white]="selectedIcon === icon"
+                [class.shadow-md]="selectedIcon === icon" [class.text-slate-500]="selectedIcon !== icon">
+                <i [class]="icon"></i>
+              </button>
+            </div>
+          </div>
+
+          <!-- Actions -->
+          <div class="pt-4 flex gap-3 border-t border-slate-100 mt-6">
+            <button *ngIf="isEditing" type="button" (click)="deleteHabit(habitForm.get('id')?.value)"
+              class="px-4 py-2 rounded-lg text-red-500 bg-red-50 hover:bg-red-100 font-medium transition-colors">
+              Eliminar
+            </button>
+            <div class="flex-1"></div>
+            <button type="button" (click)="closeModal()"
+              class="px-4 py-2 rounded-lg text-slate-600 hover:bg-slate-100 font-medium transition-colors">
+              Cancelar
+            </button>
+            <button type="submit" [disabled]="habitForm.invalid"
+              class="px-6 py-2 rounded-lg bg-blue-500 text-white font-medium hover:bg-blue-600 disabled:opacity-50 disabled:cursor-not-allowed transition-all shadow-lg shadow-blue-200">
+              {{ isEditing ? 'Guardar Cambios' : 'Crear Hábito' }}
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notification -->
+  <div *ngIf="toastMessage" class="fixed bottom-6 right-6 z-50 animate-fade-in-up">
+    <div class="bg-slate-900 text-white px-6 py-3 rounded-xl shadow-lg flex items-center gap-3">
+      <i class="pi pi-check-circle text-green-400"></i>
+      <span class="font-medium">{{ toastMessage }}</span>
+    </div>
+  </div>
+</div>

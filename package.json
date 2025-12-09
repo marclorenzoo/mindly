@@ -28,6 +28,8 @@
     "@angular/router": "^20.0.0",
     "@primeuix/themes": "^2.0.1",
     "@tailwindcss/postcss": "^4.1.17",
+    "@types/canvas-confetti": "^1.9.0",
+    "canvas-confetti": "^1.9.4",
     "daisyui": "^5.5.5",
     "postcss": "^8.5.6",
     "primeicons": "^7.0.0",
